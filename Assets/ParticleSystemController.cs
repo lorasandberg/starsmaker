@@ -22,7 +22,7 @@ public class ParticleSystemController : MonoBehaviour {
         {
             Vector2 p = new Vector2(particles[i].position.x, particles[i].position.y);
 
-            //Initialize newly created particles.
+            //Initialize newly created particles.it
             if (particles[i].velocity.x == 0 && particles[i].velocity.y == 0)
             {
                 Vector2 angled = new Vector2(p.x, p.y);

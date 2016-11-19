@@ -39,11 +39,14 @@ public class CameraController : MonoBehaviour {
 
         }
 
+        //Reset camera position with space.
         if(Input.GetButtonDown("Space"))
         {
             desiredPosition = initialPosition;
         }
 
+
+        //Smoothening
         position.y += (desiredPosition.y - position.y) * 0.1f;
         position.x += (desiredPosition.x - position.x) * 0.1f;
         position.z += (desiredPosition.z - position.z) * 0.1f;
