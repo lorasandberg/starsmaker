@@ -14,6 +14,8 @@ public class CameraController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         initialPosition = camera.transform.position;
+        desiredPosition = initialPosition;
+        distanceFromPlane = 0.8f;
 	}
 	
 	// Update is called once per frame
