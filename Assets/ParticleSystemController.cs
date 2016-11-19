@@ -13,6 +13,7 @@ using System.Collections.Generic;
 	private Vector3 addBodyLocation;
 	private bool addBodyScheduled = false;
 	private double bodyFormDistanceSqr;
+    private float collideDistance = 0.51f;
 
     // Use this for initialization
     void Start () {
@@ -95,8 +96,13 @@ using System.Collections.Generic;
 					Vector3 diff = (gravityPoints [g].transform.position 
 						- gravityPoints [h].transform.position);
 
-					gravityPoints[h].GetComponent<Rigidbody>().velocity += (diff / (diff.sqrMagnitude))
-						*Time.deltaTime*gravityPoints[g].GetComponent<Rigidbody>().mass/10000f;
+                    gravityPoints[h].GetComponent<Rigidbody>().velocity += (diff / (diff.sqrMagnitude))
+                        * Time.deltaTime * gravityPoints[g].GetComponent<Rigidbody>().mass / 10000f;
+
+                    if (diff.sqrMagnitude <= collideDistance * collideDistance) {
+                        PlanetCollision(gravityPoints[g], gravityPoints[h]);
+                    }
+
 				}
 			}
             //Keep planets from moving in the third dimension
@@ -142,4 +148,21 @@ using System.Collections.Generic;
 		addBodyLocation = loc;
 		addBodyScheduled = true;
 	}
+
+    void PlanetCollision(GameObject planet1, GameObject planet2)
+    {
+        Rigidbody rb1 = planet1.GetComponent<Rigidbody>();
+        Rigidbody rb2 = planet2.GetComponent<Rigidbody>();
+
+        if (rb1.mass > rb2.mass)
+        {
+            rb1.mass += rb2.mass;
+            stellars.destroy(planet2);
+        }
+        else if(rb1.mass < rb2.mass)
+        {
+            rb2.mass += rb1.mass;
+            stellars.destroy(planet1);
+        }
+    }
 }

@@ -9,14 +9,17 @@ public class StellarObjectController : MonoBehaviour {
     public GameObject prefab;
     public GameObject sunPrefab;
     List<GameObject> stellarObjects;
+    List<PlanetResult> results;
+
 
     // Use this for initialization
     void Start() {
         Debug.Log("Start");
         stellarObjects = new List<GameObject>();
+        results = new List<global::PlanetResult>();
 
         //add sun
-        addBody(Vector3.zero, 100, Vector3.zero, sunPrefab);
+        addBody(Vector3.zero, 3000, Vector3.zero, sunPrefab);
     }
 
     // Update is called once per frame
@@ -46,6 +49,17 @@ public class StellarObjectController : MonoBehaviour {
         stellarObjects.Add(temp);
         addedBodies++;
     }
+
+    public void destroy(GameObject planet)
+    {
+        PlanetResult result = new PlanetResult();
+        result.endMass = planet.GetComponent<Rigidbody>().mass;
+        result.color = planet.GetComponent<Renderer>().material.color;
+        results.Add(result);
+
+        stellarObjects.Remove(planet);
+        Destroy(planet);
+    } 
 
     string[] colors = new string[] {
         "#ba0900", "#3b9700", "#962b75", "#ff4a46", "#0086ed", "#f4d749", "#a4e804", "#bc23ff",
@@ -81,4 +95,10 @@ public class StellarObjectController : MonoBehaviour {
         }
         return new Color32(r, g, b, a);
     }
+}
+
+struct PlanetResult
+{
+    public float endMass;
+    public Color color;
 }
