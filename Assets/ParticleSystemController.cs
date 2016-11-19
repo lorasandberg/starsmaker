@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 	public class ParticleSystemController : MonoBehaviour {
 	public double bodyFormDistance;
+	public int aliveParticles = 0;
     public ParticleSystem myParticleSystem;
     ParticleSystem.Particle[] particles;
 	public StellarObjectController stellars;
@@ -23,7 +24,7 @@ using System.Collections.Generic;
 	void LateUpdate ()
     {
 		//List<GameObject> gravityPoints = stellars.getList();
-        int aliveParticles = myParticleSystem.GetParticles(particles);
+        aliveParticles = myParticleSystem.GetParticles(particles);
 		List<GameObject> gravityPoints = stellars.getList();
 
         for (int i = 0; i < particles.Length; i++)
@@ -49,7 +50,7 @@ using System.Collections.Generic;
 			if (addBodyScheduled) {
 				Vector3 dist = addBodyLocation - particles [i].position;
 				if (dist.sqrMagnitude < bodyFormDistanceSqr) {
-					stellars.addBody (addBodyLocation, 1, particles [i].velocity);
+					stellars.addBody (addBodyLocation, 0.3f, particles [i].velocity);
 					addBodyScheduled = false;
 					Debug.Log("body added");
 					Debug.Log(particles [i].velocity);
@@ -63,7 +64,7 @@ using System.Collections.Generic;
 			{
 				Vector3 dist = gravityPoints[j].transform.position - particles [i].position;
 				if (dist.sqrMagnitude < bodyFormDistanceSqr && particles [i].lifetime > 2) {
-					gravityPoints[j].GetComponent<Rigidbody>().mass += 1;
+					gravityPoints[j].GetComponent<Rigidbody>().mass += 0.07f;
 					particles [i].color = Color.yellow;
 					particles [i].lifetime = 1;
 					//particles[i].
@@ -76,7 +77,7 @@ using System.Collections.Generic;
             {
 				Vector3 diff = (gravityPoints [g].transform.position - particles [i].position);
 				particles [i].velocity += (diff / (diff.sqrMagnitude))
-					*Time.deltaTime*gravityPoints[g].GetComponent<Rigidbody>().mass/1000f;
+					*Time.deltaTime*gravityPoints[g].GetComponent<Rigidbody>().mass/10000f;
 				
                 //Vector2 gravity = new Vector2(-particles[i].position.x + gravityCenters[g].x,-particles[i].position.y + gravityCenters[g].y);
                 //gravity.Normalize();
@@ -95,7 +96,7 @@ using System.Collections.Generic;
 						- gravityPoints [h].transform.position);
 
 					gravityPoints[h].GetComponent<Rigidbody>().velocity += (diff / (diff.sqrMagnitude))
-						*Time.deltaTime*gravityPoints[g].GetComponent<Rigidbody>().mass/1000f;
+						*Time.deltaTime*gravityPoints[g].GetComponent<Rigidbody>().mass/10000f;
 				}
 			}
 		}
