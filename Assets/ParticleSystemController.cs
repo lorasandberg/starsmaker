@@ -13,7 +13,7 @@ using System.Collections.Generic;
 	private Vector3 addBodyLocation;
 	private bool addBodyScheduled = false;
 	private double bodyFormDistanceSqr;
-    private float collideDistance = 0.51f;
+    private float collideDistance = 0.05f;
 
     // Use this for initialization
     void Start () {
@@ -48,24 +48,26 @@ using System.Collections.Generic;
 
 			// add new body?
 
-			if (addBodyScheduled) {
-				Vector3 dist = addBodyLocation - particles [i].position;
+			if (addBodyScheduled)
+            {
+                Vector3 dist = addBodyLocation - particles [i].position;
 				if (dist.sqrMagnitude < bodyFormDistanceSqr) {
 					stellars.addBody (addBodyLocation, 0.3f, particles [i].velocity);
-					addBodyScheduled = false;
 					Debug.Log("body added");
 					Debug.Log(particles [i].velocity);
 					particles [i].lifetime = -1;
-				}
-			}
+                    addBodyScheduled = false;
+                }
+            }
 
 			// Particles colliding with bodies
 
 			for (int j = 0; j < gravityPoints.Count; j++)
 			{
 				Vector3 dist = gravityPoints[j].transform.position - particles [i].position;
-				if (dist.sqrMagnitude < bodyFormDistanceSqr && particles [i].lifetime > 2) {
-					gravityPoints[j].GetComponent<Rigidbody>().mass += 0.07f;
+
+                if (dist.sqrMagnitude < bodyFormDistanceSqr + (gravityPoints[j].transform.localScale.x/2f) && particles [i].lifetime > 2) {
+                    stellars.IncreaseMass(gravityPoints[j], 0.07f);
 					particles [i].color = Color.yellow;
 					particles [i].lifetime = 1;
 					//particles[i].
@@ -88,10 +90,17 @@ using System.Collections.Generic;
 
         }
 
-		// planet gravity
+        // planet gravity
 
-		for (int g = 0; g < gravityPoints.Count; g++){
-			for (int h = 0; h < gravityPoints.Count; h++){
+        for (int g = 0; g < gravityPoints.Count; g++){
+
+            stellars.UpdateMassScale(gravityPoints[g]);
+            //Keep planets from moving in the third dimension
+            gravityPoints[g].transform.position = new Vector3(
+                gravityPoints[g].transform.position.x, 0,
+                gravityPoints[g].transform.position.z);
+
+            for (int h = 0; h < gravityPoints.Count; h++){
 				if(g!=h){
 					Vector3 diff = (gravityPoints [g].transform.position 
 						- gravityPoints [h].transform.position);
@@ -99,16 +108,12 @@ using System.Collections.Generic;
                     gravityPoints[h].GetComponent<Rigidbody>().velocity += (diff / (diff.sqrMagnitude))
                         * Time.deltaTime * gravityPoints[g].GetComponent<Rigidbody>().mass / 10000f;
 
-                    if (diff.sqrMagnitude <= collideDistance * collideDistance) {
+                    if (diff.magnitude - gravityPoints[g].transform.localScale.x/2f - gravityPoints[h].transform.localScale.x/2f <= collideDistance) {
                         PlanetCollision(gravityPoints[g], gravityPoints[h]);
                     }
 
 				}
 			}
-            //Keep planets from moving in the third dimension
-            gravityPoints[g].transform.position = new Vector3(
-                gravityPoints[g].transform.position.x, 0, 
-                gravityPoints[g].transform.position.z);
 		}
 
  
@@ -156,12 +161,12 @@ using System.Collections.Generic;
 
         if (rb1.mass > rb2.mass)
         {
-            rb1.mass += rb2.mass;
+            stellars.IncreaseMass(planet1, rb2.mass);
             stellars.destroy(planet2);
         }
         else if(rb1.mass < rb2.mass)
         {
-            rb2.mass += rb1.mass;
+            stellars.IncreaseMass(planet2, rb1.mass);
             stellars.destroy(planet1);
         }
     }

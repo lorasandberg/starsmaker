@@ -10,6 +10,7 @@ public class StellarObjectController : MonoBehaviour {
     public GameObject sunPrefab;
     List<GameObject> stellarObjects;
     List<PlanetResult> results;
+    Dictionary<GameObject, float> desiredScales;
 
 
     // Use this for initialization
@@ -17,6 +18,7 @@ public class StellarObjectController : MonoBehaviour {
         Debug.Log("Start");
         stellarObjects = new List<GameObject>();
         results = new List<global::PlanetResult>();
+        desiredScales = new Dictionary<GameObject, float>();
 
         //add sun
         addBody(Vector3.zero, 3000, Vector3.zero, sunPrefab);
@@ -60,6 +62,35 @@ public class StellarObjectController : MonoBehaviour {
         stellarObjects.Remove(planet);
         Destroy(planet);
     } 
+
+    public void IncreaseMass(GameObject planet, float mass)
+    {
+        Rigidbody rb = planet.GetComponent<Rigidbody>();
+
+        if (!desiredScales.ContainsKey(planet))
+            desiredScales.Add(planet, planet.transform.localScale.x);
+          desiredScales[planet] += mass / 100f;
+
+        rb.mass += mass;
+    }
+
+    public void UpdateMassScale(GameObject planet)
+    {
+        if (!desiredScales.ContainsKey(planet))
+            return;
+
+        float diff = desiredScales[planet] - planet.transform.localScale.x;
+
+        if (diff <= 0)
+            return;
+
+        Vector3 scale = planet.transform.localScale;
+        scale.x += diff * 0.2f;
+        scale.y += diff * 0.2f;
+        scale.z += diff * 0.2f;
+        planet.transform.localScale = scale;
+
+    }
 
     string[] colors = new string[] {
         "#ba0900", "#3b9700", "#962b75", "#ff4a46", "#0086ed", "#f4d749", "#a4e804", "#bc23ff",
