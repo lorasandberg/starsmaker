@@ -3,6 +3,7 @@ using System.Collections;
 
 public class UserInterface : MonoBehaviour {
 
+	public ParticleSystemController psControl;
 	bool mousehold = false;
 	Rigidbody heldBody = null;
 	// Use this for initialization
@@ -29,6 +30,7 @@ public class UserInterface : MonoBehaviour {
                         heldBody = hit.rigidbody;
                     } else {
                         Debug.Log("no object");
+						psControl.AddBody (hit.point);
                         // create new body
                     }
                 } else if (heldBody != null) {
@@ -36,7 +38,7 @@ public class UserInterface : MonoBehaviour {
 					Vector3 rubberBand = hit.point - heldBody.position;
 					// limit maximum acceleration with minimum mass
 					heldBody.velocity += (rubberBand / Mathf.Max (heldBody.mass, 100)) * Time.deltaTime;
-					Debug.Log ("rubber");
+					//Debug.Log ("rubber");
 
 				}
 			}
@@ -44,6 +46,7 @@ public class UserInterface : MonoBehaviour {
 		} else {
 			// no mouse button 0, release object
 			heldBody = null;
+			mousehold = false;
 		}
 
 
