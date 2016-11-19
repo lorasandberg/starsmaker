@@ -11,7 +11,7 @@ public class StellarObjectController : MonoBehaviour {
     List<GameObject> stellarObjects;
     List<PlanetResult> results;
     Dictionary<GameObject, float> desiredScales;
-
+	AudioSource myAudio;
 
     // Use this for initialization
     void Start() {
@@ -22,6 +22,9 @@ public class StellarObjectController : MonoBehaviour {
 
         //add sun
         addBody(Vector3.zero, 3000, Vector3.zero, sunPrefab);
+
+		myAudio = GetComponent<AudioSource>();
+	
     }
 
     // Update is called once per frame
@@ -61,6 +64,7 @@ public class StellarObjectController : MonoBehaviour {
 
         stellarObjects.Remove(planet);
         Destroy(planet);
+		myAudio.Play();
     } 
 
     public void IncreaseMass(GameObject planet, float mass)
