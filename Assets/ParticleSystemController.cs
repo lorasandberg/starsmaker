@@ -48,9 +48,21 @@ using System.Collections.Generic;
 			if (addBodyScheduled) {
 				Vector3 dist = addBodyLocation - particles [i].position;
 				if (dist.sqrMagnitude < bodyFormDistanceSqr) {
-					stellars.addBody (addBodyLocation);
+					stellars.addBody (addBodyLocation, 1);
 					addBodyScheduled = false;
 					Debug.Log("body added");
+					particles [i].lifetime = -1;
+				}
+			}
+
+			// Particles colliding with bodies
+			List<GameObject> gravityPoints = stellars.getList();
+			for (int j = 0; j < gravityPoints.Count; j++)
+			{
+				Vector3 dist = gravityPoints[j].transform.position - particles [i].position;
+				if (dist.sqrMagnitude < bodyFormDistanceSqr) {
+					gravityPoints[j].GetComponent<Rigidbody>().mass += 1;
+					particles [i].lifetime = -1;
 				}
 			}
 

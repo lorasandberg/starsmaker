@@ -13,9 +13,9 @@ public class StellarObjectController : MonoBehaviour {
         stellarObjects = new List<GameObject>();
 
 		//add sun
-		addBody(Vector3.zero);
+		addBody(Vector3.zero, 100000);
     }
-	
+
 	// Update is called once per frame
 	void Update () {
 	
@@ -25,8 +25,9 @@ public class StellarObjectController : MonoBehaviour {
 		return stellarObjects;
 	}
 
-	public void addBody(Vector3 loc){
+	public void addBody(Vector3 loc, float mass){
 		GameObject temp = (GameObject)Object.Instantiate (prefab, loc, Quaternion.identity);
+		temp.GetComponent<Rigidbody>().mass = mass;
 		stellarObjects.Add (temp);
 	}
 }
