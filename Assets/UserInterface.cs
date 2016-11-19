@@ -20,18 +20,18 @@ public class UserInterface : MonoBehaviour {
 		if (Physics.Raycast (ray, out hit, 1000)) {
 
 			if (Input.GetMouseButton (0)) {
-				// we are not helding an object
-				if (!mousehold) {
-					if (hit.rigidbody) {
-						//  existing object
-						Debug.Log("catch");
-						mousehold = true;
-						heldBody = hit.rigidbody;
-					} else{
-						Debug.Log ("no object");
-						// create new body
-					}
-				} else {
+                // we are not helding an object
+                if (!mousehold) {
+                    if (hit.rigidbody) {
+                        //  existing object
+                        Debug.Log("catch");
+                        mousehold = true;
+                        heldBody = hit.rigidbody;
+                    } else {
+                        Debug.Log("no object");
+                        // create new body
+                    }
+                } else if (heldBody != null) {
 					// we are holding an object and applying velocity change
 					Vector3 rubberBand = hit.point - heldBody.position;
 					// limit maximum acceleration with minimum mass
