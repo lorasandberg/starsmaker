@@ -37,7 +37,7 @@ public class UserInterface : MonoBehaviour {
 					// we are holding an object and applying velocity change
 					Vector3 rubberBand = hit.point - heldBody.position;
 					// limit maximum acceleration with minimum mass
-					heldBody.velocity += (rubberBand / Mathf.Max (heldBody.mass, 100)) * Time.deltaTime;
+					heldBody.velocity += (rubberBand / Mathf.Max (heldBody.mass, 2)) * Time.deltaTime;
 					//Debug.Log ("rubber");
 
 				}
