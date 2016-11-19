@@ -99,7 +99,13 @@ using System.Collections.Generic;
 						*Time.deltaTime*gravityPoints[g].GetComponent<Rigidbody>().mass/10000f;
 				}
 			}
+            //Keep planets from moving in the third dimension
+            gravityPoints[g].transform.position = new Vector3(
+                gravityPoints[g].transform.position.x, 0, 
+                gravityPoints[g].transform.position.z);
 		}
+
+ 
 
 		// in case we clicked but paticles are nearby
 		addBodyScheduled = false;
