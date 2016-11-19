@@ -48,9 +48,23 @@ using System.Collections.Generic;
 			if (addBodyScheduled) {
 				Vector3 dist = addBodyLocation - particles [i].position;
 				if (dist.sqrMagnitude < bodyFormDistanceSqr) {
-					stellars.addBody (addBodyLocation);
+					stellars.addBody (addBodyLocation, 1);
 					addBodyScheduled = false;
 					Debug.Log("body added");
+					particles [i].lifetime = -1;
+				}
+			}
+
+			// Particles colliding with bodies
+			List<GameObject> gravityPoints = stellars.getList();
+			for (int j = 0; j < gravityPoints.Count; j++)
+			{
+				Vector3 dist = gravityPoints[j].transform.position - particles [i].position;
+				if (dist.sqrMagnitude < bodyFormDistanceSqr && particles [i].lifetime > 2) {
+					gravityPoints[j].GetComponent<Rigidbody>().mass += 1;
+					particles [i].color = Color.yellow;
+					particles [i].lifetime = 1;
+					//particles[i].
 				}
 			}
 
@@ -58,10 +72,12 @@ using System.Collections.Generic;
             List<Vector2> gravityCenters = getGravityPoints();
             for (int g = 0; g < gravityCenters.Count; g++)
             {
-                Vector2 gravity = new Vector2(-particles[i].position.x + gravityCenters[g].x,-particles[i].position.y + gravityCenters[g].y);
-                gravity.Normalize();
-                gravity *= 10f / p.magnitude * 0.002f; //Strength
-                particles[i].velocity = new Vector3(particles[i].velocity.x + gravity.x, particles[i].velocity.y + gravity.y, 0);
+				Vector3 diff = (gravityPoints [g].transform.position - particles [i].position);
+				particles [i].velocity += (diff / (diff.sqrMagnitude))*Time.deltaTime;
+                //Vector2 gravity = new Vector2(-particles[i].position.x + gravityCenters[g].x,-particles[i].position.y + gravityCenters[g].y);
+                //gravity.Normalize();
+                //gravity *= 10f / p.magnitude * 0.002f; //Strength
+                //particles[i].velocity = new Vector3(particles[i].velocity.x + gravity.x, particles[i].velocity.y + gravity.y, 0);
             }
         }
 
