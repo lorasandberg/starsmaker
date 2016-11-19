@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ParticleSystemController : MonoBehaviour {
+	public class ParticleSystemController : MonoBehaviour {
 	public double bodyFormDistance;
     public ParticleSystem myParticleSystem;
     ParticleSystem.Particle[] particles;
@@ -29,7 +29,7 @@ public class ParticleSystemController : MonoBehaviour {
         {
             Vector2 p = new Vector2(particles[i].position.x, particles[i].position.y);
 
-            //Initialize newly created particles.it
+            //Initialize newly created particles.
             if (particles[i].velocity.x == 0 && particles[i].velocity.y == 0)
             {
                 Vector2 angled = new Vector2(p.x, p.y);
@@ -50,7 +50,7 @@ public class ParticleSystemController : MonoBehaviour {
 				if (dist.sqrMagnitude < bodyFormDistanceSqr) {
 					stellars.addBody (addBodyLocation);
 					addBodyScheduled = false;
-					Debug.Log("no object");
+					Debug.Log("body added");
 				}
 			}
 
@@ -96,7 +96,7 @@ public class ParticleSystemController : MonoBehaviour {
         return vector;
     }
 
-	void AddBody(Vector3 loc ){
+	public void AddBody(Vector3 loc ){
 		addBodyLocation = loc;
 		addBodyScheduled = true;
 	}
