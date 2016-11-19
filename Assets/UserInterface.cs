@@ -41,14 +41,12 @@ public class UserInterface : MonoBehaviour {
 					//Debug.Log ("rubber");
 
 				}
+			} else {
+				// no mouse button 0, release object
+				heldBody = null;
+				mousehold = false;
 			}
-
-		} else {
-			// no mouse button 0, release object
-			heldBody = null;
-			mousehold = false;
-		}
-
+		} 
 
 	}
 }
