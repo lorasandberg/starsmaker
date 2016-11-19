@@ -24,6 +24,7 @@ using System.Collections.Generic;
     {
 		//List<GameObject> gravityPoints = stellars.getList();
         int aliveParticles = myParticleSystem.GetParticles(particles);
+		List<GameObject> gravityPoints = stellars.getList();
 
         for (int i = 0; i < particles.Length; i++)
         {
@@ -37,10 +38,10 @@ using System.Collections.Generic;
                 angled.Normalize();
                 
                 //Apply initial velocity, the particles are revolving around (0,0).
-                particles[i].velocity = new Vector3(angled.x, angled.y, 0);
+                particles[i].velocity = new Vector3(angled.x, 0, angled.y)/3.0f;
 
                 //The particles are created in a 3D sphere shape; reset third dimension to 0.
-                particles[i].position = new Vector3(particles[i].position.x, particles[i].position.y, 0);
+                particles[i].position = new Vector3(particles[i].position.x, 0, particles[i].position.y);
             }
 
 			// add new body?
@@ -48,15 +49,16 @@ using System.Collections.Generic;
 			if (addBodyScheduled) {
 				Vector3 dist = addBodyLocation - particles [i].position;
 				if (dist.sqrMagnitude < bodyFormDistanceSqr) {
-					stellars.addBody (addBodyLocation, 1);
+					stellars.addBody (addBodyLocation, 1, particles [i].velocity);
 					addBodyScheduled = false;
 					Debug.Log("body added");
+					Debug.Log(particles [i].velocity);
 					particles [i].lifetime = -1;
 				}
 			}
 
 			// Particles colliding with bodies
-			List<GameObject> gravityPoints = stellars.getList();
+
 			for (int j = 0; j < gravityPoints.Count; j++)
 			{
 				Vector3 dist = gravityPoints[j].transform.position - particles [i].position;
@@ -73,13 +75,30 @@ using System.Collections.Generic;
             for (int g = 0; g < gravityCenters.Count; g++)
             {
 				Vector3 diff = (gravityPoints [g].transform.position - particles [i].position);
-				particles [i].velocity += (diff / (diff.sqrMagnitude))*Time.deltaTime;
+				particles [i].velocity += (diff / (diff.sqrMagnitude))
+					*Time.deltaTime*gravityPoints[g].GetComponent<Rigidbody>().mass/1000f;
+				
                 //Vector2 gravity = new Vector2(-particles[i].position.x + gravityCenters[g].x,-particles[i].position.y + gravityCenters[g].y);
                 //gravity.Normalize();
                 //gravity *= 10f / p.magnitude * 0.002f; //Strength
                 //particles[i].velocity = new Vector3(particles[i].velocity.x + gravity.x, particles[i].velocity.y + gravity.y, 0);
             }
+
         }
+
+		// planet gravity
+
+		for (int g = 0; g < gravityPoints.Count; g++){
+			for (int h = 0; h < gravityPoints.Count; h++){
+				if(g!=h){
+					Vector3 diff = (gravityPoints [g].transform.position 
+						- gravityPoints [h].transform.position);
+
+					gravityPoints[h].GetComponent<Rigidbody>().velocity += (diff / (diff.sqrMagnitude))
+						*Time.deltaTime*gravityPoints[g].GetComponent<Rigidbody>().mass/1000f;
+				}
+			}
+		}
 
 		// in case we clicked but paticles are nearby
 		addBodyScheduled = false;
