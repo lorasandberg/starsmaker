@@ -11,14 +11,22 @@ public class StellarObjectController : MonoBehaviour {
 	void Start () {
         Debug.Log("Start");
         stellarObjects = new List<GameObject>();
-        GameObject asd = (GameObject)Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
-        stellarObjects.Add(asd);
 
-        Rigidbody rb = asd.GetComponent<Rigidbody>();
+		//add sun
+		addBody(Vector3.zero);
     }
 	
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	public List<GameObject> getList(){
+		return stellarObjects;
+	}
+
+	public void addBody(Vector3 loc){
+		GameObject temp = (GameObject)Object.Instantiate (prefab, loc, Quaternion.identity);
+		stellarObjects.Add (temp);
 	}
 }
