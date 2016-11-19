@@ -60,9 +60,11 @@ using System.Collections.Generic;
 			for (int j = 0; j < gravityPoints.Count; j++)
 			{
 				Vector3 dist = gravityPoints[j].transform.position - particles [i].position;
-				if (dist.sqrMagnitude < bodyFormDistanceSqr) {
+				if (dist.sqrMagnitude < bodyFormDistanceSqr && particles [i].lifetime > 2) {
 					gravityPoints[j].GetComponent<Rigidbody>().mass += 1;
-					particles [i].lifetime = -1;
+					particles [i].color = Color.yellow;
+					particles [i].lifetime = 1;
+					//particles[i].
 				}
 			}
 
