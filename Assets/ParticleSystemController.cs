@@ -3,20 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ParticleSystemController : MonoBehaviour {
-    public ParticleSystem particleSystem;
+	public double bodyFormDistance;
+    public ParticleSystem myParticleSystem;
     ParticleSystem.Particle[] particles;
-    public List<GameObject> gravityPoints;
+	public StellarObjectController stellars;
+
+	// for adding new body
+	private Vector3 addBodyLocation;
+	private bool addBodyScheduled = false;
+	private double bodyFormDistanceSqr;
 
     // Use this for initialization
     void Start () {
-
+		particles = new ParticleSystem.Particle[myParticleSystem.maxParticles];
+		bodyFormDistanceSqr = bodyFormDistance * bodyFormDistance;
 	}
 	
 	// Update is called once per frame
 	void LateUpdate ()
     {
-        particles = new ParticleSystem.Particle[particleSystem.maxParticles];
-        int aliveParticles = particleSystem.GetParticles(particles);
+		//List<GameObject> gravityPoints = stellars.getList();
+        int aliveParticles = myParticleSystem.GetParticles(particles);
 
         for (int i = 0; i < particles.Length; i++)
         {
@@ -36,6 +43,16 @@ public class ParticleSystemController : MonoBehaviour {
                 particles[i].position = new Vector3(particles[i].position.x, particles[i].position.y, 0);
             }
 
+			// add new body?
+
+			if (addBodyScheduled) {
+				Vector3 dist = addBodyLocation - particles [i].position;
+				if (dist.sqrMagnitude < bodyFormDistanceSqr) {
+					stellars.addBody (addBodyLocation);
+					addBodyScheduled = false;
+					Debug.Log("no object");
+				}
+			}
 
             //Calculate and apply gravity
             List<Vector2> gravityCenters = getGravityPoints();
@@ -47,14 +64,17 @@ public class ParticleSystemController : MonoBehaviour {
                 particles[i].velocity = new Vector3(particles[i].velocity.x + gravity.x, particles[i].velocity.y + gravity.y, 0);
             }
         }
- 
-        particleSystem.SetParticles(particles, aliveParticles);
+
+		// in case we clicked but paticles are nearby
+		addBodyScheduled = false;
+        myParticleSystem.SetParticles(particles, aliveParticles);
 	}
     
     //For importing stellar objects later on.
     List<Vector2> getGravityPoints()
     {
         List<Vector2> list = new List<Vector2>();
+		List<GameObject> gravityPoints = stellars.getList();
 
         for (int i = 0; i < gravityPoints.Count; i++)
             list.Add(new Vector2(gravityPoints[i].transform.position.x, -gravityPoints[i].transform.position.z));
@@ -75,4 +95,9 @@ public class ParticleSystemController : MonoBehaviour {
         
         return vector;
     }
+
+	void AddBody(Vector3 loc ){
+		addBodyLocation = loc;
+		addBodyScheduled = true;
+	}
 }
