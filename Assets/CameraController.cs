@@ -8,10 +8,12 @@ public class CameraController : MonoBehaviour {
     float maxDistance = 50;
     float minDistance = 5;
     float desiredScrollPosition;
+    Vector3 desiredPosition;
+    Vector3 initialPosition;
 
 	// Use this for initialization
 	void Start () {
-	
+        initialPosition = camera.transform.position;
 	}
 	
 	// Update is called once per frame
@@ -25,18 +27,26 @@ public class CameraController : MonoBehaviour {
         distanceFromPlane -= scroll * 0.2f;
         distanceFromPlane = Mathf.Clamp(distanceFromPlane, 0, 1);
 
-        desiredScrollPosition = (maxDistance - minDistance) * distanceFromPlane + minDistance;
+        desiredPosition.y = (maxDistance - minDistance) * distanceFromPlane + minDistance;
 
-        position.y += (desiredScrollPosition - position.y) * 0.1f;
 
 
         // Horizontal movement
         if(Input.GetMouseButton(1)) {
 
-            position.x -= Input.GetAxis("Mouse X");
-            position.z -= Input.GetAxis("Mouse Y");
+            desiredPosition.x -= Input.GetAxis("Mouse X");
+            desiredPosition.z -= Input.GetAxis("Mouse Y");
 
         }
+
+        if(Input.GetButtonDown("Space"))
+        {
+            desiredPosition = initialPosition;
+        }
+
+        position.y += (desiredPosition.y - position.y) * 0.1f;
+        position.x += (desiredPosition.x - position.x) * 0.1f;
+        position.z += (desiredPosition.z - position.z) * 0.1f;
         camera.transform.position = position;
     }
 }
