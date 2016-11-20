@@ -15,6 +15,7 @@ using System.Collections.Generic;
 	private double bodyFormDistanceSqr;
     private float collideDistance = 0.05f;
     bool timeStopped;
+	bool mouseOnGUI = false;
 
     // Use this for initialization
     void Start () {
@@ -89,14 +90,7 @@ using System.Collections.Generic;
 
         }
 
-        if (timeStopped)
-        {
-            if (Input.GetButtonDown("Submit"))
-                BeginGame();
-            //else
-              //  return;
-        }
-
+       
         // planet gravity
 
         for (int g = 0; g < gravityPoints.Count; g++){
@@ -127,6 +121,26 @@ using System.Collections.Generic;
 		addBodyScheduled = false;
         myParticleSystem.SetParticles(particles, aliveParticles);
 	}
+
+	void OnGUI() {
+		if (timeStopped){
+			Rect startButtonRect = new Rect (Screen.width / 2 - 80, Screen.height - 50, 160, 50);
+			Rect mouseStartButtonRect = new Rect (Screen.width / 2 - 80, Screen.height-(Screen.height), 160, 50);
+
+			if (mouseStartButtonRect.Contains (Input.mousePosition)) {
+				mouseOnGUI = true;
+				Debug.Log ("On GUI");
+			} else {
+				mouseOnGUI = false;
+			}
+
+			if(GUI.Button(startButtonRect, "START GAME!")){
+				BeginGame();
+			}
+			//else
+			//  return;
+		}
+	}
     
     //For importing stellar objects later on.
     List<Vector2> getGravityPoints()
@@ -155,7 +169,7 @@ using System.Collections.Generic;
     }
 
 	public void AddBody(Vector3 loc ){
-        if (!timeStopped)
+        if (!timeStopped || mouseOnGUI)
             return;
 		addBodyLocation = loc;
 		addBodyScheduled = true;
