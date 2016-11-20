@@ -40,7 +40,7 @@ public class myGUI : MonoBehaviour {
 
             GUI.color = new Color(95, 139, 152);
             if(results[i].planet == null)
-                GUI.DrawTexture(new Rect(15 + results[i].endMass, 40 + 30 * (i - 1) + 3, 12, 12), cross);
+                GUI.DrawTexture(new Rect(17 + results[i].endMass, 40 + 30 * (i - 1) + 4, 12, 12), cross);
         }
 
         GUI.Box(new Rect(Screen.width-150,10,140,30),"Time " + (gameLength-Time.time).ToString("F2"));
