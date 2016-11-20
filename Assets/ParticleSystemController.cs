@@ -129,7 +129,6 @@ using System.Collections.Generic;
 
 			if (mouseStartButtonRect.Contains (Input.mousePosition)) {
 				mouseOnGUI = true;
-				Debug.Log ("On GUI");
 			} else {
 				mouseOnGUI = false;
 			}
