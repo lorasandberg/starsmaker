@@ -93,7 +93,7 @@ public class ResultsScreenController : MonoBehaviour {
                         Mathf.Round(results[i].survivedTime).ToString());
                 }
 
-                if(GUI.Button(new Rect(Screen.width/2 - 100, Screen.width - 100, 200, 50), "Exit"))
+                if(GUI.Button(new Rect(Screen.width/2 - 100, Screen.height - 100, 200, 50), "Exit"))
                     state = State.LEAVING;
 
                 break;

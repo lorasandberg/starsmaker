@@ -90,6 +90,11 @@ public class StellarObjectController : MonoBehaviour {
         if (stellarObjects.Count == 1)
             resultsScreen.EndGame(results);
     }
+
+    public void SetGameOver()
+    {
+        resultsScreen.EndGame(results);
+    }
     
     public void IncreaseMass(GameObject planet, float mass)
     {

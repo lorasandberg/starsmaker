@@ -14,7 +14,8 @@ public class myGUI : MonoBehaviour {
     public GameColors myColors;
 	public StellarObjectController stellars;
 	public ParticleSystemController myParticleSystemController;
-	public int gameLength;
+    public int gameLength;
+    bool timeOut = false;
 
 	// Use this for initialization
 	void Start () {
@@ -42,17 +43,11 @@ public class myGUI : MonoBehaviour {
             if(results[i].planet == null)
                 GUI.DrawTexture(new Rect(17 + results[i].endMass, 40 + 30 * (i - 1) + 4, 12, 12), cross);
         }
-
-        GUI.Box(new Rect(Screen.width-150,10,140,30),"Time " + (gameLength-Time.time).ToString("F2"));
-		if (gameLength - Time.time < 0) {
-			if (gravityPoints.Count > 1) {
-				GUI.Box (new Rect (Screen.width/2 - 200, Screen.height/2-100, 400, 200), "Victory!");
-				if(!victoryAudioPlaying){
-					victoryAudioPlaying = true;
-					myAudio [2].Stop ();
-					myAudio [1].Play ();
-				}
-			}
+        if(!timeOut)
+            GUI.Box(new Rect(Screen.width-150,10,140,30),(gameLength-Time.time).ToString("F2"));
+		if (gameLength - Time.time < 0 && !timeOut) {
+            stellars.SetGameOver();
+            timeOut = true;
 		}
 	}
 }

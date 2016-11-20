@@ -125,7 +125,7 @@ using System.Collections.Generic;
 	void OnGUI() {
 		if (timeStopped){
 			Rect startButtonRect = new Rect (Screen.width / 2 - 80, Screen.height - 80, 160, 50);
-			Rect mouseStartButtonRect = new Rect (Screen.width / 2 - 80, Screen.height-(Screen.height), 160, 50);
+			Rect mouseStartButtonRect = new Rect (Screen.width / 2 - 80, 30, 160, 50);
 
 			if (mouseStartButtonRect.Contains (Input.mousePosition)) {
 				mouseOnGUI = true;
@@ -195,5 +195,10 @@ using System.Collections.Generic;
     {
         timeStopped = false;
         Time.timeScale = 1;
+    }
+
+    public bool GameRunning()
+    {
+        return !timeStopped;
     }
 }

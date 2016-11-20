@@ -3,12 +3,13 @@ using System.Collections;
 
 public class UserInterface : MonoBehaviour {
 
-	public ParticleSystemController psControl;
-	bool mousehold = false;
+    public ParticleSystemController psControl;
+    bool mousehold = false;
 	Rigidbody heldBody = null;
 	GameObject heldArrow = null;
 	public GameObject arrowPrefab;
 	AudioSource myAudio;
+    bool planetCreatedWithThisMousePress = false;
 
 	// Use this for initialization
 	void Start () {
@@ -21,10 +22,13 @@ public class UserInterface : MonoBehaviour {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 
+        if (!Input.GetMouseButton(0))
+            planetCreatedWithThisMousePress = false;
+
 		//nothing happens if we are out of game plane
 		if (Physics.Raycast (ray, out hit, 1000)) {
 
-			if (Input.GetMouseButton (0)) {
+			if (Input.GetMouseButton (0) && !psControl.GameRunning()) {
                 // we are not helding an object
                 if (!mousehold) {
                     if (hit.rigidbody) {
@@ -33,13 +37,14 @@ public class UserInterface : MonoBehaviour {
                         heldBody = hit.rigidbody;
 						heldArrow = (GameObject)Object.Instantiate(arrowPrefab, hit.point, Quaternion.identity);
 
-                    } else {
+                    } else if(!planetCreatedWithThisMousePress) {
 						psControl.AddBody (hit.point);
 						myAudio.Play ();
-
+                        planetCreatedWithThisMousePress = true;
                         // create new body
                     }
-                } else if (heldBody != null) {
+                }
+                else if (heldBody != null) {
 					
 					// we are holding an object and applying velocity change
 					Vector3 rubberBand = hit.point - heldBody.position;
