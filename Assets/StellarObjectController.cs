@@ -10,6 +10,7 @@ public class StellarObjectController : MonoBehaviour {
     public GameObject prefab;
     public GameObject sunPrefab;
 	public GameColors myColors;
+    public ResultsScreenController resultsScreen;
     List<GameObject> stellarObjects;
     List<PlanetResult> results;
     Dictionary<GameObject, float> desiredScales;
@@ -41,14 +42,6 @@ public class StellarObjectController : MonoBehaviour {
                 result.endMass = result.planet.GetComponent<Rigidbody>().mass;
                 results[i] = result;
             }
-        }
-
-        if(endGame)
-        {
-            endGameCounter -= Time.deltaTime;
-
-            if (endGameCounter <= 0)
-                SceneManager.LoadScene("title");
         }
     }
 
@@ -93,7 +86,7 @@ public class StellarObjectController : MonoBehaviour {
 		myAudio.Play();
 
         if (stellarObjects.Count == 1)
-            endGame = true;
+            resultsScreen.EndGame(results);
     }
     
     public void IncreaseMass(GameObject planet, float mass)
