@@ -6,6 +6,8 @@ public class UserInterface : MonoBehaviour {
 	public ParticleSystemController psControl;
 	bool mousehold = false;
 	Rigidbody heldBody = null;
+	GameObject heldArrow = null;
+	public GameObject arrowPrefab;
 	AudioSource myAudio;
 
 	// Use this for initialization
@@ -29,6 +31,8 @@ public class UserInterface : MonoBehaviour {
                         //  existing object
                         mousehold = true;
                         heldBody = hit.rigidbody;
+						heldArrow = (GameObject)Object.Instantiate(arrowPrefab, hit.point, Quaternion.identity);
+
                     } else {
 						psControl.AddBody (hit.point);
 						myAudio.Play ();
@@ -36,15 +40,22 @@ public class UserInterface : MonoBehaviour {
                         // create new body
                     }
                 } else if (heldBody != null) {
+					
 					// we are holding an object and applying velocity change
 					Vector3 rubberBand = hit.point - heldBody.position;
-					// limit maximum acceleration with minimum mass
-					heldBody.velocity += (rubberBand / Mathf.Max (heldBody.mass, 2)) * Time.deltaTime;
-					//Debug.Log ("rubber");
 
+					// limit maximum acceleration with minimum mass
+					heldBody.velocity = (rubberBand / 5);
+					//Debug.Log ("rubber");
+					heldArrow.transform.position = Vector3.Lerp(hit.point, heldBody.position, 0.5f);
+					heldArrow.transform.rotation = Quaternion.LookRotation(rubberBand);
+					heldArrow.transform.localScale = new Vector3(0.01f,0.01f,rubberBand.magnitude/10f);
 				}
 			} else {
 				// no mouse button 0, release object
+				if (heldArrow) {
+					Destroy (heldArrow);
+				}
 				heldBody = null;
 				mousehold = false;
 			}
