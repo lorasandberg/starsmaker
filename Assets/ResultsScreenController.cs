@@ -13,6 +13,7 @@ public class ResultsScreenController : MonoBehaviour {
     public Texture2D gameoverTexture;
     public Texture2D survivalTexture;
     public Texture2D massTexture;
+    public Texture2D barTexture;
     List<PlanetResult> results;
     // Use this for initialization
     void Start () {
@@ -61,16 +62,35 @@ public class ResultsScreenController : MonoBehaviour {
             case State.RESULTS:
                 GUI.DrawTexture(new Rect(Screen.width / 2 - gameoverTexture.width / 2, 100 - gameoverTexture.height / 2, gameoverTexture.width, gameoverTexture.height), gameoverTexture);
 
+                results.Sort(SortByMass);
+                float maxMass = 0;
+
                 for(int i = 0; i < results.Count; i++)
                 {
-                    GUI.Label(new Rect(Screen.width * 0.2f, 300 + 30 * i, 100, 100), results[i].endMass.ToString());
-                    
+                    if (maxMass == 0)
+                        maxMass = results[i].endMass;
+
+                    GUI.color = results[i].color;
+                    GUI.DrawTexture(new Rect(Screen.width * 0.2f, 300 + 30 * i, 100f * (results[i].endMass/maxMass), 18),
+                        barTexture);
+                    GUI.color = Color.white;
+                    GUI.Label(new Rect(Screen.width * 0.2f + 2, 300 + 30 * i, 100, 100),
+                        Mathf.Round(results[i].endMass).ToString());
                 }
 
 
                 break;
         }
      }
+
+    int SortByMass(PlanetResult a, PlanetResult b)
+    {
+        if (a.endMass < b.endMass)
+            return 1;
+        if (a.endMass > b.endMass)
+            return -1;
+        return 0;
+    }
 
     public void EndGame(List<PlanetResult> data)
     {
