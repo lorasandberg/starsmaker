@@ -8,6 +8,7 @@ public class myGUI : MonoBehaviour {
 	bool victoryAudioPlaying = false;
 	public AudioSource[] myAudio;
 
+    public Texture2D barTexture;
 	public GameColors myColors;
 	public StellarObjectController stellars;
 	public ParticleSystemController myParticleSystemController;
@@ -26,13 +27,16 @@ public class myGUI : MonoBehaviour {
 	}
 
 	void OnGUI() {
-		GUI.Box(new Rect(10,10,140,30),"Dust left " + aliveParticles);
+		//GUI.Box(new Rect(10,10,140,30),"Dust left " + aliveParticles);
 		List<GameObject> gravityPoints = stellars.getList();
-		for (int i = 0; i < gravityPoints.Count; i++) {
-			GUI.color = myColors.GiveColor (i);
-			GUI.Box (new Rect (10, 40 + 30 * i, 140, 30), 
-				"Body " + i + " has " + gravityPoints[i].GetComponent<Rigidbody>().mass.ToString("F2"));
-		}
+        List<PlanetResult> results = stellars.getResults();
+
+        for(int i = 0; i < results.Count; i++)
+        {
+            GUI.color = results[i].color;
+            GUI.DrawTexture(new Rect(10, 40 + 30 * (i - 1), 10 + results[i].endMass, 20), barTexture);
+        }
+        
 		GUI.Box(new Rect(Screen.width-150,10,140,30),"Time " + (gameLength-Time.time).ToString("F2"));
 		if (gameLength - Time.time < 0) {
 			if (gravityPoints.Count > 1) {

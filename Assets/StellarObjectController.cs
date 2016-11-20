@@ -22,7 +22,7 @@ public class StellarObjectController : MonoBehaviour {
     void Start() {
         Debug.Log("Start");
         stellarObjects = new List<GameObject>();
-        results = new List<global::PlanetResult>();
+        results = new List<PlanetResult>();
         desiredScales = new Dictionary<GameObject, float>();
         initialPlanets = new List<NewPlanet>();
 
@@ -35,6 +35,17 @@ public class StellarObjectController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+
+        for(int i = 0; i < results.Count; i++)
+        {
+            if(results[i].planet != null)
+            {
+                PlanetResult result = results[i];
+                result.endMass = result.planet.GetComponent<Rigidbody>().mass;
+                results[i] = result;
+            }
+        }
+
         if(endGame)
         {
             endGameCounter -= Time.deltaTime;
@@ -61,20 +72,25 @@ public class StellarObjectController : MonoBehaviour {
         loc.y = 0;
         temp.GetComponent<Rigidbody>().velocity = speed;
 
-        Renderer rend = temp.GetComponent<Renderer>();
-		rend.material.color = myColors.GiveColor(addedBodies);
+        Color color = myColors.GiveColor(addedBodies);
 
+        Renderer rend = temp.GetComponent<Renderer>();
+        rend.material.color = color;
+
+        if (prefab != sunPrefab)
+        {
+            PlanetResult result = new PlanetResult();
+            result.endMass = mass;
+            result.color = color;
+            result.planet = temp;
+            results.Add(result);
+        }
         stellarObjects.Add(temp);
         addedBodies++;
     }
 
     public void destroy(GameObject planet)
-    {
-        PlanetResult result = new PlanetResult();
-        result.endMass = planet.GetComponent<Rigidbody>().mass;
-        result.color = planet.GetComponent<Renderer>().material.color;
-        results.Add(result);
-
+    { 
         stellarObjects.Remove(planet);
         Destroy(planet);
 		myAudio.Play();
@@ -111,11 +127,17 @@ public class StellarObjectController : MonoBehaviour {
         planet.transform.localScale = scale;
 
     }
+
+    public List<PlanetResult> getResults()
+    {
+        return results;
+    }
 }
 
-struct PlanetResult
+public struct PlanetResult
 {
-    public float endMass;
+    public GameObject planet;
+    public float endMass { get; set; }
     public Color color;
 }
 
