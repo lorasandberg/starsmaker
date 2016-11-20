@@ -124,7 +124,7 @@ using System.Collections.Generic;
 
 	void OnGUI() {
 		if (timeStopped){
-			Rect startButtonRect = new Rect (Screen.width / 2 - 80, Screen.height - 50, 160, 50);
+			Rect startButtonRect = new Rect (Screen.width / 2 - 80, Screen.height - 80, 160, 50);
 			Rect mouseStartButtonRect = new Rect (Screen.width / 2 - 80, Screen.height-(Screen.height), 160, 50);
 
 			if (mouseStartButtonRect.Contains (Input.mousePosition)) {

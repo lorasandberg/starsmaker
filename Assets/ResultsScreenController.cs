@@ -36,11 +36,7 @@ public class ResultsScreenController : MonoBehaviour {
                     Time.timeScale = 0;
                 }
                 break;
-
-            case State.RESULTS:
-                if (Input.GetButtonDown("Submit"))
-                    state = State.LEAVING;
-                break;
+                
 
             case State.LEAVING:
                 leaveCounter -= Time.fixedDeltaTime;
@@ -96,6 +92,9 @@ public class ResultsScreenController : MonoBehaviour {
                     GUI.Label(new Rect(Screen.width * 0.6f + 2, 300 + 30 * i, 100, 100),
                         Mathf.Round(results[i].survivedTime).ToString());
                 }
+
+                if(GUI.Button(new Rect(Screen.width/2 - 100, Screen.width - 100, 200, 50), "Exit"))
+                    state = State.LEAVING;
 
                 break;
         }
