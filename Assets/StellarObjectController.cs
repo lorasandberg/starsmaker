@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class StellarObjectController : MonoBehaviour {
 
@@ -10,8 +11,11 @@ public class StellarObjectController : MonoBehaviour {
     public GameObject sunPrefab;
     List<GameObject> stellarObjects;
     List<PlanetResult> results;
+    List<NewPlanet> initialPlanets;
     Dictionary<GameObject, float> desiredScales;
 	AudioSource myAudio;
+    bool endGame = false;
+    float endGameCounter = 5;
 
     // Use this for initialization
     void Start() {
@@ -19,6 +23,7 @@ public class StellarObjectController : MonoBehaviour {
         stellarObjects = new List<GameObject>();
         results = new List<global::PlanetResult>();
         desiredScales = new Dictionary<GameObject, float>();
+        initialPlanets = new List<NewPlanet>();
 
         //add sun
         addBody(Vector3.zero, 3000, Vector3.zero, sunPrefab);
@@ -29,7 +34,13 @@ public class StellarObjectController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if(endGame)
+        {
+            endGameCounter -= Time.deltaTime;
 
+            if (endGameCounter <= 0)
+                SceneManager.LoadScene("title");
+        }
     }
 
     public List<GameObject> getList() {
@@ -46,6 +57,7 @@ public class StellarObjectController : MonoBehaviour {
         GameObject temp = (GameObject)Object.Instantiate(prefab, loc, Quaternion.identity);
         temp.GetComponent<Rigidbody>().mass = mass;
         speed.y = 0;
+        loc.y = 0;
         temp.GetComponent<Rigidbody>().velocity = speed;
 
         Renderer rend = temp.GetComponent<Renderer>();
@@ -65,8 +77,11 @@ public class StellarObjectController : MonoBehaviour {
         stellarObjects.Remove(planet);
         Destroy(planet);
 		myAudio.Play();
-    } 
 
+        if (stellarObjects.Count == 1)
+            endGame = true;
+    }
+    
     public void IncreaseMass(GameObject planet, float mass)
     {
         Rigidbody rb = planet.GetComponent<Rigidbody>();
@@ -136,4 +151,12 @@ struct PlanetResult
 {
     public float endMass;
     public Color color;
+}
+
+struct NewPlanet
+{
+    public Vector3 location;
+    public Vector3 speed;
+    public float mass;
+    public GameObject prefab;
 }

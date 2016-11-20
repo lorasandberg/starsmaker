@@ -14,16 +14,20 @@ using System.Collections.Generic;
 	private bool addBodyScheduled = false;
 	private double bodyFormDistanceSqr;
     private float collideDistance = 0.05f;
+    bool timeStopped;
 
     // Use this for initialization
     void Start () {
 		particles = new ParticleSystem.Particle[myParticleSystem.maxParticles];
 		bodyFormDistanceSqr = bodyFormDistance * bodyFormDistance;
+        timeStopped = true;
+        Time.timeScale = 0;
 	}
 	
 	// Update is called once per frame
 	void LateUpdate ()
     {
+
 		//List<GameObject> gravityPoints = stellars.getList();
         aliveParticles = myParticleSystem.GetParticles(particles);
 		List<GameObject> gravityPoints = stellars.getList();
@@ -31,6 +35,21 @@ using System.Collections.Generic;
         for (int i = 0; i < particles.Length; i++)
         {
             Vector2 p = new Vector2(particles[i].position.x, particles[i].position.y);
+
+            // add new body?
+
+            if (addBodyScheduled)
+            {
+                Vector3 dist = addBodyLocation - particles[i].position;
+                if (dist.sqrMagnitude < bodyFormDistanceSqr)
+                {
+                    stellars.addBody(addBodyLocation, 0.3f, particles[i].velocity);
+                    Debug.Log("body added");
+                    Debug.Log(particles[i].velocity);
+                    particles[i].lifetime = -1;
+                    addBodyScheduled = false;
+                }
+            }
 
             //Initialize newly created particles.
             if (particles[i].velocity.x == 0 && particles[i].velocity.y == 0)
@@ -46,19 +65,6 @@ using System.Collections.Generic;
                 particles[i].position = new Vector3(particles[i].position.x, 0, particles[i].position.y);
             }
 
-			// add new body?
-
-			if (addBodyScheduled)
-            {
-                Vector3 dist = addBodyLocation - particles [i].position;
-				if (dist.sqrMagnitude < bodyFormDistanceSqr) {
-					stellars.addBody (addBodyLocation, 0.3f, particles [i].velocity);
-					Debug.Log("body added");
-					Debug.Log(particles [i].velocity);
-					particles [i].lifetime = -1;
-                    addBodyScheduled = false;
-                }
-            }
 
 			// Particles colliding with bodies
 
@@ -81,13 +87,16 @@ using System.Collections.Generic;
 				Vector3 diff = (gravityPoints [g].transform.position - particles [i].position);
 				particles [i].velocity += (diff / (diff.sqrMagnitude))
 					*Time.deltaTime*gravityPoints[g].GetComponent<Rigidbody>().mass/10000f;
-				
-                //Vector2 gravity = new Vector2(-particles[i].position.x + gravityCenters[g].x,-particles[i].position.y + gravityCenters[g].y);
-                //gravity.Normalize();
-                //gravity *= 10f / p.magnitude * 0.002f; //Strength
-                //particles[i].velocity = new Vector3(particles[i].velocity.x + gravity.x, particles[i].velocity.y + gravity.y, 0);
             }
 
+        }
+
+        if (timeStopped)
+        {
+            if (Input.GetButtonDown("Submit"))
+                BeginGame();
+            //else
+              //  return;
         }
 
         // planet gravity
@@ -115,9 +124,7 @@ using System.Collections.Generic;
 				}
 			}
 		}
-
- 
-
+        
 		// in case we clicked but paticles are nearby
 		addBodyScheduled = false;
         myParticleSystem.SetParticles(particles, aliveParticles);
@@ -150,6 +157,8 @@ using System.Collections.Generic;
     }
 
 	public void AddBody(Vector3 loc ){
+        if (!timeStopped)
+            return;
 		addBodyLocation = loc;
 		addBodyScheduled = true;
 	}
@@ -169,5 +178,11 @@ using System.Collections.Generic;
             stellars.IncreaseMass(planet2, rb1.mass);
             stellars.destroy(planet1);
         }
+    }
+
+    void BeginGame()
+    {
+        timeStopped = false;
+        Time.timeScale = 1;
     }
 }
