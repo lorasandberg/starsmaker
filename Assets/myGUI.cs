@@ -15,11 +15,12 @@ public class myGUI : MonoBehaviour {
 	public StellarObjectController stellars;
 	public ParticleSystemController myParticleSystemController;
     public int gameLength;
-    bool timeOut = false;
+    bool timeOut;
 
 	// Use this for initialization
 	void Start () {
 		myAudio=GetComponents<AudioSource>();
+        timeOut = false;
 	}
 	
 	// Update is called once per frame

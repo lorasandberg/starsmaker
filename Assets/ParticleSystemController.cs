@@ -17,6 +17,8 @@ using System.Collections.Generic;
     bool timeStopped;
 	bool mouseOnGUI = false;
 
+    float tooFar = 30;
+
     // Use this for initialization
     void Start () {
 		particles = new ParticleSystem.Particle[myParticleSystem.maxParticles];
@@ -112,8 +114,12 @@ using System.Collections.Generic;
                     if (diff.magnitude - gravityPoints[g].transform.localScale.x/2f - gravityPoints[h].transform.localScale.x/2f <= collideDistance) {
                         PlanetCollision(gravityPoints[g], gravityPoints[h]);
                     }
-
-				}
+                    
+                    //Dirty check on whether the object is the sun.
+                    if (gravityPoints[g].GetComponent<Rigidbody>().mass >= 3000 && g == 0)
+                        if (diff.sqrMagnitude >= tooFar * tooFar) //Destroy the object if it's too far.
+                            stellars.destroy(gravityPoints[h]);
+                }
 			}
 		}
         
