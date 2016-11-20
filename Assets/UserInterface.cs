@@ -6,9 +6,11 @@ public class UserInterface : MonoBehaviour {
 	public ParticleSystemController psControl;
 	bool mousehold = false;
 	Rigidbody heldBody = null;
+	AudioSource myAudio;
+
 	// Use this for initialization
 	void Start () {
-	
+		myAudio = GetComponent<AudioSource>();
 	}
 		
 	// Update is called once per frame
@@ -31,6 +33,8 @@ public class UserInterface : MonoBehaviour {
                     } else {
                         Debug.Log("no object");
 						psControl.AddBody (hit.point);
+						myAudio.Play ();
+
                         // create new body
                     }
                 } else if (heldBody != null) {
