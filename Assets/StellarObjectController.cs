@@ -40,6 +40,7 @@ public class StellarObjectController : MonoBehaviour {
             {
                 PlanetResult result = results[i];
                 result.endMass = result.planet.GetComponent<Rigidbody>().mass;
+                result.survivedTime += Time.deltaTime;
                 results[i] = result;
             }
         }
@@ -73,6 +74,7 @@ public class StellarObjectController : MonoBehaviour {
             result.endMass = mass;
             result.color = color;
             result.planet = temp;
+            result.survivedTime = 0;
             results.Add(result);
         }
         stellarObjects.Add(temp);
@@ -129,6 +131,7 @@ public struct PlanetResult
     public GameObject planet;
     public float endMass { get; set; }
     public Color color;
+    public float survivedTime;
 }
 
 struct NewPlanet
