@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CameraController : MonoBehaviour {
 
-    public Camera camera;
+    public Camera gameCamera;
     float distanceFromPlane;
     float maxDistance = 50;
     float minDistance = 5;
@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        initialPosition = camera.transform.position;
+        initialPosition = gameCamera.transform.position;
         desiredPosition = initialPosition;
         distanceFromPlane = 0.3f;
 	}
@@ -24,7 +24,7 @@ public class CameraController : MonoBehaviour {
         //Scrolling
         float scroll = Input.GetAxis("Mouse ScrollWheel");
 
-        Vector3 position = camera.transform.position;
+        Vector3 position = gameCamera.transform.position;
 
         distanceFromPlane -= scroll * 0.2f;
         distanceFromPlane = Mathf.Clamp(distanceFromPlane, 0, 1);
@@ -52,6 +52,6 @@ public class CameraController : MonoBehaviour {
         position.y += (desiredPosition.y - position.y) * 0.1f;
         position.x += (desiredPosition.x - position.x) * 0.1f;
         position.z += (desiredPosition.z - position.z) * 0.1f;
-        camera.transform.position = position;
+        gameCamera.transform.position = position;
     }
 }

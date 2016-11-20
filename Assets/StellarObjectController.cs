@@ -12,7 +12,6 @@ public class StellarObjectController : MonoBehaviour {
 	public GameColors myColors;
     List<GameObject> stellarObjects;
     List<PlanetResult> results;
-    List<NewPlanet> initialPlanets;
     Dictionary<GameObject, float> desiredScales;
 	AudioSource myAudio;
     bool endGame = false;
@@ -20,11 +19,9 @@ public class StellarObjectController : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        Debug.Log("Start");
         stellarObjects = new List<GameObject>();
         results = new List<PlanetResult>();
         desiredScales = new Dictionary<GameObject, float>();
-        initialPlanets = new List<NewPlanet>();
 
         //add sun
         addBody(Vector3.zero, 3000, Vector3.zero, sunPrefab);

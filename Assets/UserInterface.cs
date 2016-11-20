@@ -27,11 +27,9 @@ public class UserInterface : MonoBehaviour {
                 if (!mousehold) {
                     if (hit.rigidbody) {
                         //  existing object
-                        Debug.Log("catch");
                         mousehold = true;
                         heldBody = hit.rigidbody;
                     } else {
-                        Debug.Log("no object");
 						psControl.AddBody (hit.point);
 						myAudio.Play ();
 

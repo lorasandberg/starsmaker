@@ -44,8 +44,6 @@ using System.Collections.Generic;
                 if (dist.sqrMagnitude < bodyFormDistanceSqr)
                 {
                     stellars.addBody(addBodyLocation, 0.3f, particles[i].velocity);
-                    Debug.Log("body added");
-                    Debug.Log(particles[i].velocity);
                     particles[i].lifetime = -1;
                     addBodyScheduled = false;
                 }
@@ -74,7 +72,7 @@ using System.Collections.Generic;
 
                 if (dist.sqrMagnitude < bodyFormDistanceSqr + (gravityPoints[j].transform.localScale.x/2f) && particles [i].lifetime > 2) {
                     stellars.IncreaseMass(gravityPoints[j], 0.07f);
-					particles [i].color = Color.yellow;
+					particles [i].startColor = Color.yellow;
 					particles [i].lifetime = 1;
 					//particles[i].
 				}
@@ -110,7 +108,7 @@ using System.Collections.Generic;
                 gravityPoints[g].transform.position.z);
 
             for (int h = 0; h < gravityPoints.Count; h++){
-				if(g!=h){
+				if(g!=h && h < gravityPoints.Count && g < gravityPoints.Count){
 					Vector3 diff = (gravityPoints [g].transform.position 
 						- gravityPoints [h].transform.position);
 
