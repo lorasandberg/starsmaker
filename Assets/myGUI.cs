@@ -15,17 +15,19 @@ public class myGUI : MonoBehaviour {
 	public StellarObjectController stellars;
 	public ParticleSystemController myParticleSystemController;
     public int gameLength;
+    float timeOutCounter;
     bool timeOut;
 
 	// Use this for initialization
 	void Start () {
 		myAudio=GetComponents<AudioSource>();
         timeOut = false;
+        timeOutCounter = gameLength;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+        timeOutCounter -= Time.deltaTime;
 	}
 
 	void OnGUI() {
@@ -45,8 +47,8 @@ public class myGUI : MonoBehaviour {
                 GUI.DrawTexture(new Rect(17 + results[i].endMass, 40 + 30 * (i - 1) + 4, 12, 12), cross);
         }
         if(!timeOut)
-            GUI.Box(new Rect(Screen.width-150,10,140,30),(gameLength-Time.time).ToString("F2"));
-		if (gameLength - Time.time < 0 && !timeOut) {
+            GUI.Box(new Rect(Screen.width-150,10,140,30),(timeOutCounter).ToString("F2"));
+		if (timeOutCounter < 0 && !timeOut) {
             stellars.SetGameOver();
             timeOut = true;
 		}

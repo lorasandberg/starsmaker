@@ -8,8 +8,8 @@ public class ResultsScreenController : MonoBehaviour {
     enum State { PLAYING, END_DELAY, RESULTS, LEAVING };
     State state;
     bool gameOver = false;
-    float endGameCounter = 5;
-    float leaveCounter = 3;
+    float endGameCounter;
+    float leaveCounter;
     public Texture2D gameoverTexture;
     public Texture2D survivalTexture;
     public Texture2D massTexture;
@@ -18,6 +18,8 @@ public class ResultsScreenController : MonoBehaviour {
     // Use this for initialization
     void Start () {
         state = State.PLAYING;
+        endGameCounter = 5;
+        leaveCounter = 3;
 	}
 	
 	// Update is called once per frame
